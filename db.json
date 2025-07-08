@@ -2,20 +2,20 @@
   "tasks": [
     {
       "id": 1,
-      "task_name": "Go Shopping with white dress"
+      "task_name": "Go Shopping"
     },
     {
       "id": 2,
-      "task_name": "Gym go to tonight with white dress"
+      "task_name": "Gym go to tonight"
     },
     {
       "id": 3,
-      "task_name": "Listen to music with white dress"
+      "task_name": "Listen to music"
     },
     {
       "id": 4,
       "gh": "",
-      "task_name": "Hug white dress"
+      "task_name": "Learn DSA"
     }
   ]
 }
