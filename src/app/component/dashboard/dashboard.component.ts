@@ -1,0 +1,107 @@
+import { Component, OnInit } from '@angular/core';
+import { Task } from 'src/app/model/task';
+import { CrudService } from 'src/app/service/crud.service';
+import { ChangeDetectorRef } from '@angular/core';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
+
+  taskObj: Task = new Task();
+  taskArr: Task[] = [];
+
+  alertMessage: string = '';
+  isAlertOpen: boolean = false;
+  inputWidth = '100px';
+  // inputHeight = '100px';
+
+
+  addTaskValue: string = '';
+  editTaskValue: string = '';
+
+  constructor(private crudService: CrudService,
+    private cdr: ChangeDetectorRef) { }
+
+  ngOnInit(): void {
+    this.editTaskValue = '';
+    this.addTaskValue = '';
+    this.taskObj = new Task();
+    this.taskArr = [];
+    this.getAllTask();  
+  }
+  getAllTask() {
+    this.crudService.getAllTask().subscribe(res => {
+      this.taskArr = res;
+    }, err => {
+      alert("Unable to get list of tasks");
+    });
+  }
+
+
+  showError: boolean = false;
+
+  hideError() {
+    if (this.addTaskValue.trim() !== '') {
+      this.showError = false;
+    }
+  }
+
+  addTask() {
+    if (this.addTaskValue.trim() === '') {
+      this.showError = true;
+      return;
+    }
+  
+    this.taskObj.task_name = this.addTaskValue;
+    this.crudService.addTask(this.taskObj).subscribe(
+      (res) => {
+        this.ngOnInit();
+        this.addTaskValue = '';
+  
+      },
+      (err) => {
+        alert(err);
+      }
+    );
+  }
+
+  onInput() {
+    this.showError = false;
+  }
+
+  
+
+  resizeInput() {
+
+    this.inputWidth = (this.addTaskValue.length * 9) + 'px';
+    // this.inputHeight = (this.addTaskValue.length * 10) + 'px';
+  }
+
+
+  editTask() {
+    this.taskObj.task_name = this.editTaskValue;
+    this.crudService.editTask(this.taskObj).subscribe(res => {
+      this.ngOnInit();
+    }, err => {
+      alert("Failed to update task");
+    })
+  }
+
+  deleteTask(etask: Task) {
+    this.crudService.deleteTask(etask).subscribe(res => {
+      this.ngOnInit();
+    }, err => {
+      alert("Failed to delete task");
+    });
+  }
+
+  call(etask: Task) {
+    this.taskObj = etask;
+    this.editTaskValue = etask.task_name;
+  }
+
+
+}
